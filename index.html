@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#e8ecd9" />
+  <title>Codex Lectorem</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e8ecd9'/%3E%3Cg stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Cpath d='M32 12l1.5 4 4 1.5-4 1.5L32 23l-1.5-4-4-1.5 4-1.5z' fill='%231a1a1a'/%3E%3Cpath d='M14 30h18v22H16c-1 0-2-1-2-2z'/%3E%3Cpath d='M50 30H32v22h16c1 0 2-1 2-2z'/%3E%3Cpath d='M32 30v22'/%3E%3C/g%3E%3C/svg%3E">
+
+  <style>
+    /* ==================================================================
+       THEME
+       ================================================================== */
+    :root {
+      --bg: #e8ecd9;
+      --bg-soft: #dde2cb;
+      --bg-card: #eef2de;
+      --ink: #1a1a1a;
+      --ink-soft: #4a4a4a;
+      --ink-muted: #8a8d7c;
+      --line: #1a1a1a;
+      --line-soft: rgba(26, 26, 26, 0.12);
+      --line-mid: rgba(26, 26, 26, 0.22);
+      --accent: #d17a4a;
+      --accent-soft: #e89268;
+      --success: #6b8a5a;
+      --info: #5a7a8a;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --radius-pill: 999px;
+      --chart-pal: #c9a876;
+      --chart-reading: #1a1a1a;
+      --chart-finished: #6b8a5a;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+    html { background: var(--bg); }
+    body {
+      font-family: 'Geist', system-ui, sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    button, input, select, textarea { font-family: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; padding: 0; }
+
+    /* ==================================================================
+       DISPLAY TYPE (Bricolage Grotesque)
+       ================================================================== */
+    .display {
+      font-family: 'Bricolage Grotesque', 'Geist', sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      font-variation-settings: "opsz" 96;
+    }
+    .display-med {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+    }
+
+    /* ==================================================================
+       LAYOUT
+       ================================================================== */
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 18px 100px;
+    }
+    @media (min-width: 900px) {
+      .app { padding: 32px 40px 60px; }
+    }
+
+    /* ==================================================================
+       HEADER
+       ================================================================== */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-top: env(safe-area-inset-top);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .logo {
+      width: 52px; height: 52px;
+      border: 1.5px solid var(--ink);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .logo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(209,122,74,0.12), transparent 60%);
+      pointer-events: none;
+    }
+    .logo svg { width: 30px; height: 30px; position: relative; z-index: 1; }
+    .brand-text { min-width: 0; }
+    .brand-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin: 0;
+      font-variation-settings: "opsz" 96;
+    }
+    .brand-tag {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+      margin-top: 5px;
+    }
+
+    .icon-square {
+      width: 44px; height: 44px;
+      border: 1.5px solid var(--ink);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      flex-shrink: 0;
+      transition: background 0.15s;
+      color: var(--ink);
+    }
+    .icon-square:hover { background: var(--bg-soft); }
+    .icon-square svg { width: 20px; height: 20px; }
+
+    /* ==================================================================
+       NAV
+       ================================================================== */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0;
+      padding: 10px 16px 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.15s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .nav-tab:hover { background: var(--bg-card); }
+    .nav-tab.active { background: var(--ink); color: var(--bg); }
+    .nav-tab svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ==================================================================
+       CARDS
+       ================================================================== */
+    .card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      position: relative;
+    }
+    .card + .card { margin-top: 14px; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+      margin: 0;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title.dark { color: var(--ink); }
+    .card-title svg { width: 14px; height: 14px; }
+
+    /* ==================================================================
+       HERO
+       ================================================================== */
+    .hero {
+      background: var(--bg-card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+    }
+    .hero-big {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(3.4rem, 13vw, 6rem);
+      line-height: 0.9;
+      letter-spacing: -0.035em;
+      margin: 0 0 4px;
+      font-weight: 600;
+      font-variation-settings: "opsz" 96;
+    }
+    .hero-big .unit {
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+    .hero-sub {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .hero-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 24px;
+    }
+    .hero-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .hero-row-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-row-label svg { width: 12px; height: 12px; }
+    .hero-row-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+    .bars {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 28px;
+      margin: 0 12px;
+      overflow: hidden;
+    }
+    .bar { flex: 1; background: var(--ink); min-width: 1px; opacity: 0.85; }
+    .bar.soft { opacity: 0.22; }
+
+    .hero-ribbon {
+      margin: 0 -24px;
+      background: var(--accent);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    .hero-ribbon .ribbon-action {
+      width: 32px; height: 32px;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .hero-ribbon.success { background: var(--success); }
+
+    /* ==================================================================
+       STATS
+       ================================================================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    @media (min-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-cell {
+      background: var(--bg-card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      position: relative;
+    }
+    .stat-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stat-label svg { width: 11px; height: 11px; }
+    .stat-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+      font-variation-settings: "opsz" 96;
+    }
+    .stat-value .unit-small {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      margin-left: 3px;
+      font-weight: 400;
+    }
+
+    /* ==================================================================
+       SPLIT
+       ================================================================== */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media (min-width: 900px) {
+      .split { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ==================================================================
+       CHARTS
+       ================================================================== */
+    .chart-wrap {
+      width: 100%;
+      height: 180px;
+      position: relative;
+    }
+    .chart-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-item strong {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.9rem;
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .chart-kpi {
+      position: absolute;
+      top: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      pointer-events: none;
+    }
+    .chart-kpi .k-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .chart-kpi .k-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+    }
+
+    /* Progression bars per book */
+    .prog-book {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .prog-book:last-child { border-bottom: none; padding-bottom: 0; }
+    .prog-book-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .prog-book-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .prog-book-pct {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .prog-bar-outer {
+      height: 6px;
+      background: var(--bg);
+      border: 1px solid var(--line-soft);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .prog-bar-inner {
+      height: 100%;
+      background: var(--ink);
+      transition: width 0.4s ease-out;
+    }
+    .prog-book-meta {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    /* ==================================================================
+       BOOK CARDS
+       ================================================================== */
+    .book-list { display: flex; flex-direction: column; gap: 10px; }
+    .book-card {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      padding: 14px;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      align-items: start;
+    }
+    .book-card.compact { grid-template-columns: 56px 1fr; padding: 10px 12px; }
+    .cover {
+      width: 72px; height: 100px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg-soft);
+      border: 1px solid var(--line-soft);
+      flex-shrink: 0;
+    }
+    .book-card.compact .cover { width: 56px; height: 78px; }
+    .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px;
+      text-align: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      background: var(--bg-soft);
+      letter-spacing: -0.01em;
+    }
+    .book-info { min-width: 0; }
+    .book-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.15;
+      margin: 0 0 3px;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+    .book-author {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      margin-bottom: 8px;
+    }
+    .book-meta {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+    .book-desc {
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .badge {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 9px;
+      border: 1px solid var(--line-mid);
+      border-radius: var(--radius-pill);
+      color: var(--ink);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge svg { width: 10px; height: 10px; }
+    .badge.pal { background: var(--bg-soft); }
+    .badge.reading { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .badge.finished { background: var(--success); color: #fff; border-color: var(--success); }
+    .badge.type-audio { background: var(--bg-card); }
+
+    .rating-stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .star-btn, .star-static {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--line-mid);
+      background: var(--bg);
+      color: var(--ink-muted);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .star-btn:hover { border-color: var(--ink); transform: translateY(-1px); }
+    .star-btn.on, .star-static.on {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+    }
+    .star-btn svg, .star-static svg { width: 14px; height: 14px; }
+    .rating-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .rating-text {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .book-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .progress {
+      height: 4px;
+      background: var(--line-soft);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .progress-fill { height: 100%; background: var(--ink); transition: width 0.3s; }
+    .progress-text {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    /* ==================================================================
+       BUTTONS
+       ================================================================== */
+    .btn {
+      padding: 10px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: 'Geist', sans-serif;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-align: center;
+    }
+    .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .btn:hover { background: var(--bg-card); }
+    .btn.primary { background: var(--ink); color: var(--bg); }
+    .btn.primary:hover { background: var(--ink-soft); }
+    .btn.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.accent:hover { background: var(--accent-soft); border-color: var(--accent-soft); }
+    .btn.ghost { border-color: var(--line-mid); }
+    .btn.ghost:hover { border-color: var(--line); }
+    .btn.danger:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.sm { padding: 6px 12px; font-size: 0.74rem; }
+    .btn.full { width: 100%; }
+
+    .icon-btn {
+      width: 44px; height: 44px;
+      border: 1.5px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--ink); color: var(--bg); }
+    .icon-btn svg { width: 16px; height: 16px; }
+
+    /* ==================================================================
+       INPUTS
+       ================================================================== */
+    .field-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .input, .select, .textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-family: 'Geist', sans-serif;
+      transition: border-color 0.15s;
+    }
+    .input:focus, .select:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+      background: var(--bg-card);
+    }
+    .textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+    .select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 5l3 3 3-3' stroke='%231a1a1a' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px;
+      padding-right: 40px;
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 0; }
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ==================================================================
+       SEGMENTED
+       ================================================================== */
+    .segmented {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+      gap: 2px;
+    }
+    .segmented button {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      font-family: 'Geist Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .segmented button.on { background: var(--ink); color: var(--bg); }
+
+    /* ==================================================================
+       TIMER
+       ================================================================== */
+    .timer-hero {
+      background: var(--bg-card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .timer-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .timer-label svg { width: 12px; height: 12px; }
+    .timer-display {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(3.6rem, 14vw, 6.4rem);
+      line-height: 0.9;
+      letter-spacing: -0.035em;
+      margin-bottom: 4px;
+      font-weight: 600;
+      font-variation-settings: "opsz" 96;
+    }
+    .timer-display.running { color: var(--accent); }
+    .timer-subnote {
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+    }
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ==================================================================
+       SEARCH, LIBRARY, EMPTY
+       ================================================================== */
+    .results-scroll {
+      max-height: 460px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .results-scroll::-webkit-scrollbar { width: 6px; }
+    .results-scroll::-webkit-scrollbar-thumb { background: var(--line-mid); border-radius: 3px; }
+
+    .filters-bar { display: flex; flex-direction: column; gap: 12px; }
+    @media (min-width: 720px) {
+      .filters-bar { flex-direction: row; align-items: center; }
+      .filters-bar .input { flex: 1; }
+    }
+
+    .empty {
+      padding: 28px 20px;
+      border: 1.5px dashed var(--line-mid);
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--ink-muted);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* ==================================================================
+       VIEW TRANSITIONS
+       ================================================================== */
+    .view { animation: fadeUp 0.28s ease-out; }
+    .view.hidden { display: none; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==================================================================
+       TOAST
+       ================================================================== */
+    .toast {
+      position: fixed;
+      left: 50%; transform: translateX(-50%) translateY(100px);
+      bottom: 24px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      z-index: 999;
+      transition: transform 0.3s, opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.accent { background: var(--accent); }
+
+    /* ==================================================================
+       SHEET
+       ================================================================== */
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,26,26,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 100;
+    }
+    .sheet-backdrop.show { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: fixed;
+      top: 0; right: 0;
+      height: 100dvh;
+      width: min(320px, 86vw);
+      background: var(--bg);
+      border-left: 1.5px solid var(--line);
+      padding: 20px;
+      transform: translateX(100%);
+      transition: transform 0.28s ease-out;
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sheet.show { transform: translateX(0); }
+    .sheet-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      letter-spacing: -0.02em;
+      margin: 4px 0 12px;
+    }
+    .sheet .btn { justify-content: flex-start; width: 100%; }
+    .sheet label.btn { cursor: pointer; }
+
+    /* ==================================================================
+       UTIL
+       ================================================================== */
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb { background: var(--line-mid); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ==================================================================
+       ICON SYMBOLS LIBRARY
+       ================================================================== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- Home -->
+      <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11l8-7 8 7v9a2 2 0 01-2 2h-3v-7h-6v7H6a2 2 0 01-2-2v-9z"/>
+      </symbol>
+      <!-- Timer -->
+      <symbol id="i-timer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 3h6"/>
+      </symbol>
+      <!-- Library -->
+      <symbol id="i-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h3v16H4zM9 4h3v16H9zM15 5l3-1 3 16-3 1z"/>
+      </symbol>
+      <!-- Plus -->
+      <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </symbol>
+      <!-- Minus -->
+      <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M5 12h14"/>
+      </symbol>
+      <!-- Play -->
+      <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 5l12 7-12 7V5z"/>
+      </symbol>
+      <!-- Pause -->
+      <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+      </symbol>
+      <!-- Reset -->
+      <symbol id="i-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5"/>
+      </symbol>
+      <!-- Book -->
+      <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 5a2 2 0 012-2h13v18H6a2 2 0 01-2-2V5zM9 3v18"/>
+      </symbol>
+      <!-- Headphones -->
+      <symbol id="i-headphones" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 15v-3a8 8 0 1116 0v3M4 15h3v5H5a1 1 0 01-1-1v-4zM17 15h3v4a1 1 0 01-1 1h-2v-5z"/>
+      </symbol>
+      <!-- Check -->
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12l5 5L20 6"/>
+      </symbol>
+      <!-- Clock -->
+      <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+      </symbol>
+      <!-- Pages -->
+      <symbol id="i-pages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="14" height="18" rx="1"/><path d="M8 7h6M8 11h6M8 15h4"/>
+      </symbol>
+      <!-- Stack / PAL -->
+      <symbol id="i-stack" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7l9-4 9 4-9 4-9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/>
+      </symbol>
+      <!-- Chart line -->
+      <symbol id="i-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 17l5-5 4 4 7-9M15 7h5v5"/>
+      </symbol>
+      <!-- Pie -->
+      <symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a9 9 0 109 9h-9V3z"/><path d="M21 8A9 9 0 0016 3v5h5z"/>
+      </symbol>
+      <!-- Search -->
+      <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/>
+      </symbol>
+      <!-- Download -->
+      <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v13M7 11l5 5 5-5M4 21h16"/>
+      </symbol>
+      <!-- Upload -->
+      <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 21V8M7 13l5-5 5 5M4 3h16"/>
+      </symbol>
+      <!-- Sparkle -->
+      <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM19 15l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>
+      </symbol>
+
+      <!-- Star -->
+      <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 3.6l2.5 5.06 5.58.81-4.04 3.94.95 5.56L12 16.3 7.01 19l.95-5.56L3.92 9.47l5.58-.81L12 3.6z"/>
+      </symbol>
+
+      <!-- Trash -->
+      <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4h6v3"/>
+      </symbol>
+      <!-- Edit -->
+      <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 20h4l10-10-4-4L4 16v4zM13 7l4 4"/>
+      </symbol>
+      <!-- Arrow up-right -->
+      <symbol id="i-arrow-ur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 17L17 7M17 7H9M17 7v8"/>
+      </symbol>
+      <!-- Menu dots -->
+      <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="5" cy="6" r="1.2"/><circle cx="12" cy="6" r="1.2"/><circle cx="19" cy="6" r="1.2"/>
+        <circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>
+        <circle cx="5" cy="18" r="1.2"/><circle cx="12" cy="18" r="1.2"/><circle cx="19" cy="18" r="1.2"/>
+      </symbol>
+      <!-- Flame -->
+      <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3s4 4 4 8a4 4 0 01-8 0c0-2 1-3 1-3s-1-2 0-4c1 1 3 0 3-1zM12 15a3 3 0 01-3 3c0 2 1 3 3 3s3-1 3-3a3 3 0 01-3-3z"/>
+      </symbol>
+      <!-- Target -->
+      <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ==================================================================
+       APP
+       ================================================================== -->
+  <div class="app">
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- Logo: codex ancien + livre ouvert avec étoile/soleil au-dessus -->
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Rayonnement de soleil / étoile codex -->
+            <g stroke-width="1.3" opacity="0.85">
+              <path d="M20 4v3"/>
+              <path d="M13 6l1.5 2.5"/>
+              <path d="M27 6l-1.5 2.5"/>
+            </g>
+            <!-- Étoile centrale -->
+            <path d="M20 8l1.5 3L24.5 12l-3 1.5L20 16l-1.5-3L15.5 12l3-1L20 8z" fill="currentColor" stroke-width="1.1"/>
+            <!-- Livre ouvert — page gauche -->
+            <path d="M5 19c3-1 7-1 9.5 0.5v15.5c-2.5-1.5-6.5-1.5-9.5-0.5V19z" stroke-width="1.6"/>
+            <!-- Livre ouvert — page droite -->
+            <path d="M35 19c-3-1-7-1-9.5 0.5v15.5c2.5-1.5 6.5-1.5 9.5-0.5V19z" stroke-width="1.6"/>
+            <!-- Dos central -->
+            <path d="M14.5 19.5v15.5M25.5 19.5v15.5" stroke-width="1.3"/>
+            <!-- Lignes de texte sur page gauche -->
+            <path d="M8 23.5h4M8 26h4M8 28.5h3" stroke-width="0.9" opacity="0.55"/>
+            <!-- Lignes de texte sur page droite -->
+            <path d="M28 23.5h4M28 26h4M28 28.5h3" stroke-width="0.9" opacity="0.55"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">Codex Lectorem</h1>
+          <div class="brand-tag">Carnet de lecture</div>
+        </div>
+      </div>
+      <button class="icon-square" id="menuBtn" aria-label="Menu">
+        <svg><use href="#i-dots"/></svg>
+      </button>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="nav-tab active" data-view="dashboard"><svg><use href="#i-home"/></svg>Accueil</button>
+      <button class="nav-tab" data-view="timer"><svg><use href="#i-timer"/></svg>Chronomètre</button>
+      <button class="nav-tab" data-view="library"><svg><use href="#i-library"/></svg>Bibliothèque</button>
+      <button class="nav-tab" data-view="add"><svg><use href="#i-plus"/></svg>Ajouter</button>
+    </nav>
+
+    <!-- ==============================================================
+         DASHBOARD
+         ============================================================== -->
+    <section id="view-dashboard" class="view">
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-label" id="heroDateLabel">Aujourd'hui</div>
+        <h2 class="hero-big"><span id="heroBigValue">0</span><span class="unit" id="heroBigUnit"> min</span></h2>
+        <div class="hero-sub" id="heroSub">Aucune session enregistrée aujourd'hui.</div>
+
+        <div class="hero-rows">
+          <div class="hero-row">
+            <span class="hero-row-label"><svg><use href="#i-pages"/></svg> Pages lues</span>
+            <div class="bars" id="pagesBars"></div>
+            <span class="hero-row-value" id="heroPages">0</span>
+          </div>
+          <div class="hero-row">
+            <span class="hero-row-label"><svg><use href="#i-flame"/></svg> Sessions</span>
+            <div class="bars" id="sessionsBars"></div>
+            <span class="hero-row-value" id="heroSessions">0</span>
+          </div>
+        </div>
+
+        <div class="hero-ribbon" id="heroRibbon">
+          <span id="heroRibbonText">Lance ta première session du jour</span>
+          <button class="ribbon-action" onclick="switchView('timer')" aria-label="Aller au chronomètre">
+            <svg width="14" height="14"><use href="#i-arrow-ur"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <!-- CHARTS -->
+      <div class="split">
+        <!-- Courbe pages 30 jours -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-line"/></svg>Pages lues · 30 jours</h3>
+            <span class="book-meta" id="chartPages30Total">0 pages</span>
+          </div>
+          <div class="chart-wrap" id="chartPages30"></div>
+        </div>
+
+        <!-- Courbe temps 30 jours -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-clock"/></svg>Temps de lecture · 30 jours</h3>
+            <span class="book-meta" id="chartTime30Total">0 h</span>
+          </div>
+          <div class="chart-wrap" id="chartTime30"></div>
+        </div>
+      </div>
+
+      <div class="split">
+        <!-- Donut PAL/en cours/terminé -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-pie"/></svg>Répartition du codex</h3>
+          </div>
+          <div id="chartDonut"></div>
+        </div>
+
+        <!-- Progression livres en cours -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-target"/></svg>Progression · en cours</h3>
+          </div>
+          <div id="chartProgress"></div>
+        </div>
+      </div>
+
+      <!-- Current reading + finished -->
+      <div class="split">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-book"/></svg>Lecture actuelle</h3>
+          </div>
+          <div id="currentReadingCard"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-check"/></svg>Derniers terminés</h3>
+          </div>
+          <div id="recentFinished"></div>
+        </div>
+      </div>
+
+      <!-- Recent progress -->
+      <div class="card" style="margin-top: 14px;">
+        <div class="card-header">
+          <h3 class="card-title dark"><svg><use href="#i-flame"/></svg>Progression récente</h3>
+        </div>
+        <div id="recentProgress"></div>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         TIMER
+         ============================================================== -->
+    <section id="view-timer" class="view hidden">
+      <div class="timer-hero">
+        <div class="timer-label"><svg><use href="#i-timer"/></svg>Session en cours</div>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-subnote" id="timerBookNote">Choisis un livre pour commencer.</div>
+        <div class="timer-controls">
+          <button class="btn primary" id="startTimerBtn"><svg><use href="#i-play"/></svg>Démarrer</button>
+          <button class="btn ghost" id="pauseTimerBtn"><svg><use href="#i-pause"/></svg>Pause</button>
+          <button class="btn ghost" id="resetTimerBtn"><svg><use href="#i-reset"/></svg>Reset</button>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-book"/></svg>Livre &amp; pages lues</h3>
+          </div>
+          <div class="stack">
+            <div>
+              <label class="field-label" for="timerBookSelect">Livre lu</label>
+              <select class="select" id="timerBookSelect"></select>
+            </div>
+            <div>
+              <label class="field-label" for="pagesReadInput">Pages lues <span style="color:var(--accent);">*obligatoire</span></label>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <button class="icon-btn" type="button" onclick="adjustPages(-1)" aria-label="Moins">
+                  <svg><use href="#i-minus"/></svg>
+                </button>
+                <input class="input" id="pagesReadInput" type="number" min="0" placeholder="0"
+                  style="text-align:center; font-family:'Bricolage Grotesque',sans-serif; font-size:1.5rem; font-weight:600; letter-spacing:-0.02em;">
+                <button class="icon-btn" type="button" onclick="adjustPages(1)" aria-label="Plus">
+                  <svg><use href="#i-plus"/></svg>
+                </button>
+              </div>
+            </div>
+            <button class="btn accent full" id="saveSessionBtn"><svg><use href="#i-check"/></svg>Sauvegarder la session</button>
+            <div class="book-meta" id="todayReadingNote">Aucune session enregistrée aujourd'hui.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-clock"/></svg>Journal du jour</h3>
+          </div>
+          <div id="todaySessions"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         LIBRARY
+         ============================================================== -->
+    <section id="view-library" class="view hidden">
+      <div class="card">
+        <div class="filters-bar">
+          <input class="input" id="librarySearch" placeholder="🔎 Rechercher un titre, un auteur…">
+          <div class="segmented" role="group" aria-label="Filtre statut">
+            <button data-status="all" class="on">Tous</button>
+            <button data-status="reading">En cours</button>
+            <button data-status="pal">PAL</button>
+            <button data-status="finished">Terminés</button>
+          </div>
+          <div class="segmented" role="group" aria-label="Filtre format">
+            <button data-type="all" class="on">Tous</button>
+            <button data-type="papier">Papier</button>
+            <button data-type="audio">Audio</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 14px;" id="libraryList"></div>
+    </section>
+
+    <!-- ==============================================================
+         ADD
+         ============================================================== -->
+    <section id="view-add" class="view hidden">
+      <div class="split">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark"><svg><use href="#i-search"/></svg>Recherche Google Books</h3>
+          </div>
+          <div class="stack">
+            <div class="row">
+              <input class="input" id="googleSearchInput" placeholder="Ex. Dune Frank Herbert">
+              <button class="btn primary" id="googleSearchBtn" style="flex:0 0 auto;"><svg><use href="#i-search"/></svg>Chercher</button>
+            </div>
+            <div class="book-meta">Titre, auteur, couverture, résumé et pages préremplis.</div>
+            <div class="results-scroll" id="searchResults"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title dark" id="formTitleHeader"><svg><use href="#i-edit"/></svg>Fiche de lecture</h3>
+          </div>
+          <div class="stack">
+            <div><label class="field-label" for="formTitle">Titre *</label><input class="input" id="formTitle" placeholder="Titre du livre"></div>
+            <div><label class="field-label" for="formAuthor">Auteur</label><input class="input" id="formAuthor" placeholder="Nom de l'auteur"></div>
+            <div><label class="field-label" for="formCover">URL de couverture</label><input class="input" id="formCover" placeholder="https://..."></div>
+            <div><label class="field-label" for="formDescription">Résumé</label><textarea class="textarea" id="formDescription" placeholder="Résumé du livre"></textarea></div>
+            <div class="row">
+              <div><label class="field-label" for="formPages">Pages totales</label><input class="input" id="formPages" type="number" min="0" placeholder="0"></div>
+              <div><label class="field-label" for="formCurrentPage">Page actuelle</label><input class="input" id="formCurrentPage" type="number" min="0" placeholder="0"></div>
+            </div>
+            <div class="row">
+              <div><label class="field-label" for="formStatus">Statut</label>
+                <select class="select" id="formStatus">
+                  <option value="pal">PAL (à lire)</option><option value="reading">En cours</option><option value="finished">Terminé</option>
+                </select>
+              </div>
+              <div><label class="field-label" for="formType">Format</label>
+                <select class="select" id="formType">
+                  <option value="papier">Livre papier</option><option value="audio">Livre audio</option>
+                </select>
+              </div>
+            </div>
+            <div id="ratingFieldWrap">
+              <label class="field-label">Note</label>
+              <div class="rating-stars" id="ratingStarsInput" role="radiogroup" aria-label="Note du livre">
+                <button type="button" class="star-btn" data-rating="1" aria-label="1 étoile"><svg><use href="#i-star"/></svg></button>
+                <button type="button" class="star-btn" data-rating="2" aria-label="2 étoiles"><svg><use href="#i-star"/></svg></button>
+                <button type="button" class="star-btn" data-rating="3" aria-label="3 étoiles"><svg><use href="#i-star"/></svg></button>
+                <button type="button" class="star-btn" data-rating="4" aria-label="4 étoiles"><svg><use href="#i-star"/></svg></button>
+                <button type="button" class="star-btn" data-rating="5" aria-label="5 étoiles"><svg><use href="#i-star"/></svg></button>
+              </div>
+              <div class="book-meta" id="ratingHelpText">Optionnel. Idéal pour les livres terminés.</div>
+            </div>
+            <div class="row">
+              <button class="btn accent" id="saveBookBtn"><svg><use href="#i-check"/></svg>Enregistrer</button>
+              <button class="btn ghost" id="resetFormBtn" style="flex:0 0 auto;">Vider</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Sheet -->
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <aside class="sheet" id="sheet" aria-label="Menu">
+    <h2 class="sheet-title">Sauvegarde</h2>
+    <button class="btn" id="exportBtn"><svg><use href="#i-download"/></svg>Exporter en JSON</button>
+    <label class="btn" for="importFile"><svg><use href="#i-upload"/></svg>Importer un JSON</label>
+    <input id="importFile" type="file" accept="application/json" hidden>
+    <div style="height: 1px; background: var(--line-soft); margin: 8px 0;"></div>
+    <button class="btn ghost" id="seedBtn"><svg><use href="#i-sparkle"/></svg>Charger un exemple</button>
+    <button class="btn danger" id="wipeBtn"><svg><use href="#i-trash"/></svg>Tout effacer</button>
+    <div style="flex: 1;"></div>
+    <div class="book-meta">
+      Les données sont stockées localement (localStorage). Pense à exporter régulièrement.
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ==============================================================
+    // STATE & STORAGE
+    // ==============================================================
+    const STORAGE_KEY = 'codex-lectorem-v3';
+
+    const state = {
+      books: [],
+      sessions: [],
+      timer: { running: false, startAt: null, elapsedMs: 0 },
+      editingId: null,
+      activeView: 'dashboard',
+      libraryFilters: { status: 'all', type: 'all', query: '' },
+      formRating: 0,
+    };
+
+    const els = {};
+    const qs = (id) => document.getElementById(id);
+
+    function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+    function todayKey() { return new Date().toISOString().slice(0, 10); }
+    function escapeHtml(v = '') {
+      return String(v).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+    }
+    function normalizeBook(book = {}) {
+      const rating = Number(book.rating) || 0;
+      return { ...book, rating: Math.max(0, Math.min(5, rating)) };
+    }
+    function ratingLabel(value) {
+      if (!value) return 'Non noté';
+      return `${value}/5`;
+    }
+    function renderRatingStars(value = 0, interactive = false) {
+      const safeValue = Math.max(0, Math.min(5, Number(value) || 0));
+      return Array.from({ length: 5 }, (_, i) => {
+        const n = i + 1;
+        if (interactive) {
+          return `<button type="button" class="star-btn ${n <= safeValue ? 'on' : ''}" data-rating="${n}" aria-label="${n} étoile${n > 1 ? 's' : ''}"><svg><use href="#i-star"/></svg></button>`;
+        }
+        return `<span class="star-static ${n <= safeValue ? 'on' : ''}" aria-hidden="true"><svg><use href="#i-star"/></svg></span>`;
+      }).join('');
+    }
+    function updateRatingInput(value = 0) {
+      const safeValue = Math.max(0, Math.min(5, Number(value) || 0));
+      state.formRating = safeValue;
+      qs('ratingStarsInput').innerHTML = renderRatingStars(safeValue, true);
+      qs('ratingHelpText').textContent = safeValue ? `Note sélectionnée : ${safeValue}/5` : 'Optionnel. Idéal pour les livres terminés.';
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        state.books = Array.isArray(data.books) ? data.books.map(normalizeBook) : [];
+        state.sessions = Array.isArray(data.sessions) ? data.sessions : [];
+      } catch (e) { console.error('Load error', e); }
+    }
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ books: state.books, sessions: state.sessions }));
+      } catch (e) { toast('Impossible de sauvegarder', 'accent'); }
+    }
+
+    // ==============================================================
+    // UTILS
+    // ==============================================================
+    function formatDuration(ms) {
+      const total = Math.floor(ms / 1000);
+      const h = String(Math.floor(total / 3600)).padStart(2, '0');
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2, '0');
+      const s = String(total % 60).padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+    function minutes(ms) { return Math.round(ms / 60000); }
+    function hours1(ms) { return Math.round((ms / 3600000) * 10) / 10; }
+    function bookById(id) { return state.books.find(b => b.id === id); }
+    function statusLabel(s) { return s === 'reading' ? 'En cours' : s === 'finished' ? 'Terminé' : 'PAL'; }
+    function formatFrenchDate(iso) {
+      try {
+        return new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+      } catch { return iso; }
+    }
+    function coverHtml(book, compact = false) {
+      if (book.cover) {
+        return `<div class="cover"><img src="${escapeHtml(book.cover)}" alt="Couverture ${escapeHtml(book.title)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'cover-placeholder\\'>${escapeHtml((book.title || 'Livre').slice(0, 20))}</div>'"></div>`;
+      }
+      return `<div class="cover"><div class="cover-placeholder">${escapeHtml((book.title || 'Livre').slice(0, 20))}</div></div>`;
+    }
+    function toast(msg, variant = '') {
+      const t = els.toast;
+      t.textContent = msg;
+      t.className = 'toast show' + (variant ? ' ' + variant : '');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => { t.className = 'toast' + (variant ? ' ' + variant : ''); }, 2400);
+    }
+
+    // ==============================================================
+    // STATS
+    // ==============================================================
+    function computeStats() {
+      const finished = state.books.filter(b => b.status === 'finished');
+      const reading = state.books.filter(b => b.status === 'reading');
+      const pal = state.books.filter(b => b.status === 'pal');
+      const totalPages = state.books.reduce((s, b) => s + (Number(b.pages) || 0), 0);
+      const pagesReadInBooks = state.books.reduce((s, b) => {
+        const cur = Number(b.currentPage) || 0, tot = Number(b.pages) || 0;
+        if (b.status === 'finished' && tot > 0) return s + tot;
+        return s + Math.min(cur, tot || cur);
+      }, 0);
+      const todaySessions = state.sessions.filter(s => s.date === todayKey());
+      const todayMs = todaySessions.reduce((s, x) => s + x.durationMs, 0);
+      const todayPages = todaySessions.reduce((s, x) => s + (Number(x.pagesRead) || 0), 0);
+      const totalPagesFromSessions = state.sessions.reduce((s, x) => s + (Number(x.pagesRead) || 0), 0);
+      const avgPagesPerSession = state.sessions.length ? Math.round((totalPagesFromSessions / state.sessions.length) * 10) / 10 : 0;
+      const ratedFinished = finished.filter(b => Number(b.rating) > 0);
+      const avgRating = ratedFinished.length ? Math.round((ratedFinished.reduce((s, b) => s + Number(b.rating || 0), 0) / ratedFinished.length) * 10) / 10 : 0;
+
+      // 7 jours (hero)
+      const last7 = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        const pages = state.sessions.filter(s => s.date === key).reduce((a, s) => a + (Number(s.pagesRead) || 0), 0);
+        const count = state.sessions.filter(s => s.date === key).length;
+        last7.push({ key, pages, count });
+      }
+
+      // 30 jours (charts)
+      const last30 = [];
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        const sessions = state.sessions.filter(s => s.date === key);
+        const pages = sessions.reduce((a, s) => a + (Number(s.pagesRead) || 0), 0);
+        const ms = sessions.reduce((a, s) => a + (Number(s.durationMs) || 0), 0);
+        last30.push({ key, pages, ms });
+      }
+
+      return {
+        total: state.books.length, finished: finished.length, reading: reading.length, pal: pal.length,
+        totalPages, pagesReadInBooks,
+        todayMinutes: minutes(todayMs), todayPages, todaySessionsCount: todaySessions.length,
+        avgPagesPerSession,
+        paper: state.books.filter(b => b.type === 'papier').length,
+        audio: state.books.filter(b => b.type === 'audio').length,
+        ratedFinished: ratedFinished.length,
+        avgRating,
+        last7, last30,
+        readingBooks: reading,
+      };
+    }
+
+    // ==============================================================
+    // CHARTS
+    // ==============================================================
+    // Smooth area chart (SVG)
+    function renderAreaChart(containerId, data, valueKey, unitLabel, totalElId, formatTotal) {
+      const container = qs(containerId);
+      const w = 540, h = 180; // viewBox, responsive
+      const pad = { top: 16, right: 12, bottom: 28, left: 12 };
+      const innerW = w - pad.left - pad.right;
+      const innerH = h - pad.top - pad.bottom;
+
+      const values = data.map(d => d[valueKey]);
+      const max = Math.max(1, ...values);
+      const totalValue = values.reduce((a, b) => a + b, 0);
+      const nonZero = values.filter(v => v > 0).length;
+
+      // Points
+      const pts = data.map((d, i) => {
+        const x = pad.left + (i / (data.length - 1)) * innerW;
+        const y = pad.top + innerH - (d[valueKey] / max) * innerH;
+        return { x, y, v: d[valueKey], key: d.key };
+      });
+
+      // Smooth path (catmull-rom-ish)
+      function smoothPath(points) {
+        if (!points.length) return '';
+        let d = `M ${points[0].x},${points[0].y}`;
+        for (let i = 0; i < points.length - 1; i++) {
+          const p0 = points[i === 0 ? i : i - 1];
+          const p1 = points[i];
+          const p2 = points[i + 1];
+          const p3 = points[i + 2 === points.length ? i + 1 : i + 2];
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2y = p2.y - (p3.y - p1.y) / 6;
+          d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+        }
+        return d;
+      }
+
+      const linePath = smoothPath(pts);
+      const areaPath = `${linePath} L ${pts[pts.length - 1].x},${pad.top + innerH} L ${pts[0].x},${pad.top + innerH} Z`;
+
+      // X-axis labels (4 points : today, -10j, -20j, -30j)
+      const labelIndexes = [0, Math.floor(data.length / 3), Math.floor((data.length * 2) / 3), data.length - 1];
+      const xLabels = labelIndexes.map(i => {
+        const d = new Date(data[i].key + 'T00:00:00');
+        const label = i === data.length - 1 ? 'auj.' : `-${data.length - 1 - i}j`;
+        return { x: pts[i].x, label };
+      });
+
+      // Dots only for non-zero values (avoid visual noise)
+      const dotMarkers = pts.map((p, i) => {
+        if (p.v === 0) return '';
+        return `<circle cx="${p.x}" cy="${p.y}" r="2.8" fill="var(--ink)"/>`;
+      }).join('');
+
+      // Grid (3 horizontal lines)
+      const gridLines = [0.25, 0.5, 0.75].map(f => {
+        const y = pad.top + innerH * f;
+        return `<line x1="${pad.left}" y1="${y}" x2="${pad.left + innerW}" y2="${y}" stroke="var(--line-soft)" stroke-dasharray="2 3"/>`;
+      }).join('');
+
+      const gradId = `grad-${containerId}`;
+      const svg = `
+        <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="${gradId}" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="var(--ink)" stop-opacity="0.28"/>
+              <stop offset="100%" stop-color="var(--ink)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          ${gridLines}
+          <path d="${areaPath}" fill="url(#${gradId})"/>
+          <path d="${linePath}" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          ${dotMarkers}
+          ${xLabels.map(l => `
+            <text x="${l.x}" y="${h - 6}" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="var(--ink-muted)" letter-spacing="1">${l.label}</text>
+          `).join('')}
+        </svg>
+      `;
+      container.innerHTML = svg;
+      if (totalElId && formatTotal) qs(totalElId).textContent = formatTotal(totalValue, nonZero);
+    }
+
+    // Donut chart (SVG)
+    function renderDonut(s) {
+      const container = qs('chartDonut');
+      const total = s.pal + s.reading + s.finished;
+      if (total === 0) {
+        container.innerHTML = `<div class="empty">Ajoute des livres pour voir la répartition.</div>`;
+        return;
+      }
+
+      const size = 180;
+      const r = 66;
+      const strokeW = 22;
+      const cx = size / 2, cy = size / 2;
+      const circumference = 2 * Math.PI * r;
+
+      const slices = [
+        { label: 'PAL', value: s.pal, color: 'var(--chart-pal)' },
+        { label: 'En cours', value: s.reading, color: 'var(--chart-reading)' },
+        { label: 'Terminés', value: s.finished, color: 'var(--chart-finished)' },
+      ].filter(x => x.value > 0);
+
+      let cumul = 0;
+      const segments = slices.map((sl, i) => {
+        const frac = sl.value / total;
+        const length = frac * circumference;
+        const gap = 2; // petit espace entre segments
+        const dashArray = `${Math.max(0, length - gap)} ${circumference - length + gap}`;
+        const dashOffset = -cumul * circumference;
+        cumul += frac;
+        return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+          stroke="${sl.color}" stroke-width="${strokeW}"
+          stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}"
+          transform="rotate(-90 ${cx} ${cy})"/>`;
+      }).join('');
+
+      const legend = [
+        { label: 'PAL', value: s.pal, color: 'var(--chart-pal)' },
+        { label: 'En cours', value: s.reading, color: 'var(--chart-reading)' },
+        { label: 'Terminés', value: s.finished, color: 'var(--chart-finished)' },
+      ];
+
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:center;">
+          <div style="position:relative; width:${size}px; height:${size}px; flex-shrink:0;">
+            <svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+              ${segments}
+            </svg>
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+              <div class="display" style="font-size:2rem; font-weight:600; line-height:1;">${total}</div>
+              <div style="font-family:'Geist Mono',monospace; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--ink-muted); margin-top:4px;">Livres</div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px; min-width:120px;">
+            ${legend.map(l => `
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="legend-dot" style="background:${l.color}; border: 1px solid var(--line-soft);"></div>
+                <div style="display:flex; flex-direction:column; line-height:1.2;">
+                  <strong style="font-family:'Bricolage Grotesque',sans-serif; font-size:1.1rem; font-weight:600; letter-spacing:-0.02em;">${l.value}</strong>
+                  <span style="font-family:'Geist Mono',monospace; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-muted);">${l.label}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Progress bars for reading books
+    function renderProgressBars(readingBooks) {
+      const container = qs('chartProgress');
+      if (!readingBooks.length) {
+        container.innerHTML = `<div class="empty">Aucune lecture en cours.</div>`;
+        return;
+      }
+      container.innerHTML = readingBooks.map(b => {
+        const cur = Number(b.currentPage) || 0;
+        const tot = Number(b.pages) || 0;
+        const pct = tot > 0 ? Math.min(100, Math.round((cur / tot) * 100)) : 0;
+        return `
+          <div class="prog-book">
+            <div class="prog-book-head">
+              <span class="prog-book-title" title="${escapeHtml(b.title)}">${escapeHtml(b.title)}</span>
+              <span class="prog-book-pct">${pct}%</span>
+            </div>
+            <div class="prog-bar-outer"><div class="prog-bar-inner" style="width:${pct}%"></div></div>
+            <div class="prog-book-meta">${cur} / ${tot || '—'} pages · ${escapeHtml(b.author || 'Auteur inconnu')}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==============================================================
+    // RENDERERS
+    // ==============================================================
+    function renderDashboard() {
+      const s = computeStats();
+
+      // Hero
+      qs('heroDateLabel').textContent = formatFrenchDate(todayKey());
+      qs('heroBigValue').textContent = s.todayMinutes;
+      qs('heroBigUnit').textContent = ' min';
+      qs('heroSub').textContent = s.todaySessionsCount > 0
+        ? `${s.todaySessionsCount} session${s.todaySessionsCount > 1 ? 's' : ''} · ${s.todayPages} pages aujourd'hui`
+        : `Aucune session aujourd'hui. Lance le chronomètre quand tu veux.`;
+      qs('heroPages').textContent = s.todayPages;
+      qs('heroSessions').textContent = s.todaySessionsCount;
+
+      const maxPages = Math.max(1, ...s.last7.map(d => d.pages));
+      qs('pagesBars').innerHTML = s.last7.map(d => {
+        const h = Math.max(4, Math.round((d.pages / maxPages) * 28));
+        return `<div class="${d.pages === 0 ? 'bar soft' : 'bar'}" style="height:${h}px" title="${d.key}: ${d.pages} pages"></div>`;
+      }).join('');
+
+      const maxSess = Math.max(1, ...s.last7.map(d => d.count));
+      qs('sessionsBars').innerHTML = s.last7.map(d => {
+        const h = Math.max(4, Math.round((d.count / maxSess) * 28));
+        return `<div class="${d.count === 0 ? 'bar soft' : 'bar'}" style="height:${h}px"></div>`;
+      }).join('');
+
+      const ribbon = qs('heroRibbon');
+      const ribbonText = qs('heroRibbonText');
+      if (s.todayMinutes >= 30) {
+        ribbon.className = 'hero-ribbon success';
+        ribbonText.textContent = `✓ Objectif 30 min atteint`;
+      } else if (s.todaySessionsCount > 0) {
+        ribbon.className = 'hero-ribbon';
+        ribbonText.textContent = `${30 - s.todayMinutes} min pour atteindre 30 min`;
+      } else {
+        ribbon.className = 'hero-ribbon';
+        ribbonText.textContent = `Lance ta première session du jour`;
+      }
+
+      // Stats
+      const statCells = [
+        { label: 'Livres', value: s.total, icon: 'i-book' },
+        { label: 'Terminés', value: s.finished, icon: 'i-check' },
+        { label: 'En cours', value: s.reading, icon: 'i-flame' },
+        { label: 'PAL', value: s.pal, icon: 'i-stack' },
+        { label: 'Pages totales', value: s.totalPages, icon: 'i-pages' },
+        { label: 'Pages lues', value: s.pagesReadInBooks, icon: 'i-line' },
+        { label: 'Moy / session', value: s.avgPagesPerSession, unit: 'p', icon: 'i-target' },
+        { label: 'Note moy.', value: s.avgRating || '—', unit: s.avgRating ? '/5' : '', icon: 'i-star' },
+      ];
+      qs('statsGrid').innerHTML = statCells.map(c => `
+        <div class="stat-cell">
+          <div class="stat-label"><svg><use href="#${c.icon}"/></svg>${c.label}</div>
+          <div class="stat-value">${c.value}${c.unit ? `<span class="unit-small">${c.unit}</span>` : ''}</div>
+        </div>
+      `).join('');
+
+      // Charts 30 jours
+      renderAreaChart('chartPages30', s.last30, 'pages', 'pages', 'chartPages30Total',
+        (total, nz) => `${total} pages · ${nz} jour${nz > 1 ? 's' : ''} actif${nz > 1 ? 's' : ''}`);
+      renderAreaChart('chartTime30', s.last30, 'ms', 'h', 'chartTime30Total',
+        (total, nz) => `${hours1(total)} h · ${nz} jour${nz > 1 ? 's' : ''} actif${nz > 1 ? 's' : ''}`);
+
+      // Donut
+      renderDonut(s);
+
+      // Progress bars
+      renderProgressBars(s.readingBooks);
+
+      // Current reading
+      const current = state.books.find(b => b.status === 'reading');
+      qs('currentReadingCard').innerHTML = current
+        ? renderBookCard(current, { showProgress: true })
+        : `<div class="empty">Aucune lecture en cours.</div>`;
+
+      const finished = state.books.filter(b => b.status === 'finished').slice(-3).reverse();
+      qs('recentFinished').innerHTML = finished.length
+        ? `<div class="book-list">${finished.map(b => renderBookCard(b, { compact: true })).join('')}</div>`
+        : `<div class="empty">Pas encore de livre terminé.</div>`;
+
+      const recentSessions = [...state.sessions].slice(-5).reverse();
+      qs('recentProgress').innerHTML = recentSessions.length ? `
+        <div class="book-list">${recentSessions.map(session => {
+          const book = bookById(session.bookId);
+          return `
+            <div class="book-card compact">
+              ${book ? coverHtml(book, true) : `<div class="cover"><div class="cover-placeholder">?</div></div>`}
+              <div class="book-info">
+                <h3 class="book-title">${escapeHtml(book?.title || 'Livre supprimé')}</h3>
+                <div class="book-meta">${formatFrenchDate(session.date)} · ${formatDuration(session.durationMs)}</div>
+                <div class="badges">
+                  <span class="badge"><svg><use href="#i-pages"/></svg>${Number(session.pagesRead) || 0} pages</span>
+                  <span class="badge"><svg><use href="#i-clock"/></svg>${minutes(session.durationMs)} min</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}</div>
+      ` : `<div class="empty">Aucune progression récente. Le codex attend.</div>`;
+    }
+
+    function renderBookCard(book, opts = {}) {
+      const { compact = false, showProgress = false, showActions = false } = opts;
+      const total = Number(book.pages) || 0, current = Number(book.currentPage) || 0;
+      const pct = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : 0;
+      const progressHtml = showProgress && total > 0 ? `
+        <div class="progress"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-text">${current} / ${total} pages · ${pct}%</div>
+      ` : '';
+      const descHtml = !compact && book.description
+        ? `<div class="book-desc">${escapeHtml(book.description.slice(0, 200))}${book.description.length > 200 ? '…' : ''}</div>`
+        : '';
+      const actionsHtml = showActions ? `
+        <div class="book-actions">
+          <button class="btn sm ghost" onclick="editBook('${book.id}')"><svg><use href="#i-edit"/></svg>Modifier</button>
+          <button class="btn sm danger" onclick="deleteBook('${book.id}')"><svg><use href="#i-trash"/></svg>Supprimer</button>
+        </div>
+      ` : '';
+      const ratingHtml = book.status === 'finished' ? `
+        <div class="rating-inline">
+          <div class="rating-stars">${renderRatingStars(book.rating || 0)}</div>
+          <span class="rating-text">${ratingLabel(book.rating || 0)}</span>
+        </div>
+      ` : '';
+      const typeIcon = book.type === 'audio' ? 'i-headphones' : 'i-book';
+      return `
+        <article class="book-card ${compact ? 'compact' : ''}">
+          ${coverHtml(book, compact)}
+          <div class="book-info">
+            <h3 class="book-title">${escapeHtml(book.title)}</h3>
+            <div class="book-author">${escapeHtml(book.author || 'Auteur inconnu')}</div>
+            <div class="badges">
+              <span class="badge ${book.status}">${statusLabel(book.status)}</span>
+              <span class="badge type-${book.type}"><svg><use href="#${typeIcon}"/></svg>${book.type === 'audio' ? 'Audio' : 'Papier'}</span>
+              ${total > 0 ? `<span class="badge"><svg><use href="#i-pages"/></svg>${total} p.</span>` : ''}
+            </div>
+            ${progressHtml}
+            ${descHtml}
+            ${ratingHtml}
+            ${actionsHtml}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderLibrary() {
+      const q = state.libraryFilters.query.toLowerCase();
+      const status = state.libraryFilters.status;
+      const type = state.libraryFilters.type;
+      const filtered = state.books.filter(book => {
+        const hay = `${book.title} ${book.author} ${book.description || ''}`.toLowerCase();
+        return (!q || hay.includes(q)) && (status === 'all' || book.status === status) && (type === 'all' || book.type === type);
+      });
+      qs('libraryList').innerHTML = filtered.length
+        ? `<div class="book-list">${filtered.map(b => renderBookCard(b, { showProgress: true, showActions: true })).join('')}</div>`
+        : `<div class="empty">Aucun livre ne correspond à ce filtre.</div>`;
+    }
+
+    function renderTimerSelect() {
+      const reading = state.books.filter(b => b.status === 'reading');
+      const source = reading.length ? reading : state.books;
+      els.timerBookSelect.innerHTML = source.length
+        ? `<option value="">— Choisir un livre —</option>` + source.map(book =>
+          `<option value="${book.id}">${escapeHtml(book.title)} — ${escapeHtml(book.author || 'Auteur inconnu')}</option>`).join('')
+        : `<option value="">Aucun livre dans la bibliothèque</option>`;
+      updateTimerBookNote();
+    }
+
+    function updateTimerBookNote() {
+      const id = els.timerBookSelect.value;
+      const book = id ? bookById(id) : null;
+      qs('timerBookNote').textContent = book ? `${book.title} — ${book.author || 'Auteur inconnu'}` : `Choisis un livre pour commencer.`;
+    }
+
+    function renderTodaySessions() {
+      const sessions = state.sessions.filter(s => s.date === todayKey()).reverse();
+      const totalMs = sessions.reduce((s, x) => s + x.durationMs, 0);
+      const totalPages = sessions.reduce((s, x) => s + (Number(x.pagesRead) || 0), 0);
+      qs('todayReadingNote').textContent = sessions.length
+        ? `Aujourd'hui : ${minutes(totalMs)} min · ${totalPages} pages · ${sessions.length} session${sessions.length > 1 ? 's' : ''}`
+        : `Aucune session enregistrée aujourd'hui.`;
+      qs('todaySessions').innerHTML = sessions.length ? `
+        <div class="book-list">${sessions.map(session => {
+          const book = bookById(session.bookId);
+          return `
+            <div class="book-card compact">
+              ${book ? coverHtml(book, true) : `<div class="cover"><div class="cover-placeholder">?</div></div>`}
+              <div class="book-info">
+                <h3 class="book-title">${escapeHtml(book?.title || 'Livre supprimé')}</h3>
+                <div class="book-meta">${formatDuration(session.durationMs)}</div>
+                <div class="badges">
+                  <span class="badge"><svg><use href="#i-pages"/></svg>${Number(session.pagesRead) || 0} pages</span>
+                  <span class="badge"><svg><use href="#i-clock"/></svg>${minutes(session.durationMs)} min</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}</div>
+      ` : `<div class="empty">Le journal du jour est vide.</div>`;
+    }
+
+    function renderSearchResults(items = []) {
+      qs('searchResults').innerHTML = items.length ? items.map(item => `
+        <article class="book-card">
+          ${item.cover ? `<div class="cover"><img src="${escapeHtml(item.cover)}" alt="${escapeHtml(item.title)}" loading="lazy"></div>` : `<div class="cover"><div class="cover-placeholder">${escapeHtml(item.title.slice(0, 18))}</div></div>`}
+          <div class="book-info">
+            <h3 class="book-title">${escapeHtml(item.title)}</h3>
+            <div class="book-author">${escapeHtml(item.author || 'Auteur inconnu')}</div>
+            <div class="badges">${item.pages ? `<span class="badge"><svg><use href="#i-pages"/></svg>${item.pages} p.</span>` : ''}</div>
+            <div class="book-desc">${escapeHtml((item.description || 'Pas de résumé disponible.').slice(0, 160))}${(item.description || '').length > 160 ? '…' : ''}</div>
+            <div class="book-actions">
+              <button class="btn sm accent" onclick='prefillForm(${JSON.stringify(item).replace(/'/g, "&#39;")})'><svg><use href="#i-check"/></svg>Utiliser</button>
+            </div>
+          </div>
+        </article>
+      `).join('') : `<div class="empty">Lance une recherche pour préremplir une fiche.</div>`;
+    }
+
+    // ==============================================================
+    // VIEW
+    // ==============================================================
+    function switchView(view) {
+      state.activeView = view;
+      document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+      qs(`view-${view}`).classList.remove('hidden');
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderAll();
+    }
+    window.switchView = switchView;
+
+    // ==============================================================
+    // FORM
+    // ==============================================================
+    function resetForm() {
+      state.editingId = null;
+      ['formTitle','formAuthor','formCover','formDescription','formPages','formCurrentPage'].forEach(k => els[k].value = '');
+      els.formStatus.value = 'pal'; els.formType.value = 'papier';
+      updateRatingInput(0);
+      els.saveBookBtn.innerHTML = '<svg><use href="#i-check"/></svg>Enregistrer';
+    }
+
+    window.prefillForm = function (item) {
+      state.editingId = null;
+      els.formTitle.value = item.title || ''; els.formAuthor.value = item.author || '';
+      els.formCover.value = item.cover || ''; els.formDescription.value = item.description || '';
+      els.formPages.value = item.pages || ''; els.formCurrentPage.value = 0;
+      els.formStatus.value = 'pal'; els.formType.value = 'papier';
+      updateRatingInput(0);
+      els.saveBookBtn.innerHTML = '<svg><use href="#i-check"/></svg>Enregistrer';
+      switchView('add'); toast('Fiche préremplie ✓');
+    };
+
+    window.editBook = function (id) {
+      const book = bookById(id); if (!book) return;
+      state.editingId = id;
+      els.formTitle.value = book.title || ''; els.formAuthor.value = book.author || '';
+      els.formCover.value = book.cover || ''; els.formDescription.value = book.description || '';
+      els.formPages.value = book.pages || ''; els.formCurrentPage.value = book.currentPage || '';
+      els.formStatus.value = book.status || 'pal'; els.formType.value = book.type || 'papier';
+      updateRatingInput(book.rating || 0);
+      els.saveBookBtn.innerHTML = '<svg><use href="#i-check"/></svg>Mettre à jour';
+      switchView('add');
+    };
+
+    window.deleteBook = function (id) {
+      if (!confirm('Supprimer ce livre et toutes ses sessions ?')) return;
+      state.books = state.books.filter(b => b.id !== id);
+      state.sessions = state.sessions.filter(s => s.bookId !== id);
+      saveState(); renderAll(); toast('Livre supprimé');
+    };
+
+    function saveBook() {
+      const book = {
+        id: state.editingId || uid(),
+        title: els.formTitle.value.trim(), author: els.formAuthor.value.trim(),
+        cover: els.formCover.value.trim(), description: els.formDescription.value.trim(),
+        pages: Number(els.formPages.value) || 0, currentPage: Number(els.formCurrentPage.value) || 0,
+        status: els.formStatus.value, type: els.formType.value, rating: state.formRating || 0, updatedAt: Date.now(),
+      };
+      if (!book.title) { toast('Le titre est obligatoire', 'accent'); els.formTitle.focus(); return; }
+      if (book.status !== 'finished') book.rating = 0;
+      if (state.editingId) {
+        const idx = state.books.findIndex(b => b.id === state.editingId);
+        if (idx >= 0) state.books[idx] = book;
+        toast('Livre mis à jour ✓');
+      } else {
+        state.books.unshift(book); toast('Livre enregistré ✓');
+      }
+      saveState(); resetForm(); switchView('library');
+    }
+
+    // ==============================================================
+    // GOOGLE BOOKS
+    // ==============================================================
+    async function searchGoogleBooks() {
+      const query = els.googleSearchInput.value.trim();
+      if (!query) return;
+      qs('searchResults').innerHTML = `<div class="empty">Recherche en cours…</div>`;
+      try {
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&langRestrict=fr`;
+        const r = await fetch(url);
+        const data = await r.json();
+        const items = (data.items || []).map(item => ({
+          title: item.volumeInfo?.title || 'Sans titre',
+          author: (item.volumeInfo?.authors || []).join(', '),
+          cover: (item.volumeInfo?.imageLinks?.thumbnail || item.volumeInfo?.imageLinks?.smallThumbnail || '').replace('http://', 'https://'),
+          description: item.volumeInfo?.description || '',
+          pages: item.volumeInfo?.pageCount || 0,
+        }));
+        renderSearchResults(items);
+      } catch (e) {
+        console.error(e);
+        qs('searchResults').innerHTML = `<div class="empty">Impossible de joindre Google Books.</div>`;
+      }
+    }
+
+    // ==============================================================
+    // IMPORT / EXPORT
+    // ==============================================================
+    function exportJson() {
+      const blob = new Blob([JSON.stringify({ books: state.books, sessions: state.sessions, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `codex-lectorem-${todayKey()}.json`; a.click();
+      URL.revokeObjectURL(url); closeSheet(); toast('Sauvegarde téléchargée ✓');
+    }
+    function importJson(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!Array.isArray(parsed.books)) throw new Error('format invalide');
+          if (!confirm('Remplacer les données actuelles par celles du fichier ?')) return;
+          state.books = parsed.books.map(normalizeBook);
+          state.sessions = Array.isArray(parsed.sessions) ? parsed.sessions : [];
+          saveState(); renderAll(); closeSheet(); toast('Données importées ✓');
+        } catch (e) { toast('Fichier JSON invalide', 'accent'); }
+      };
+      reader.readAsText(file);
+    }
+    function wipeData() {
+      if (!confirm('Tout effacer : livres, sessions, sauvegarde locale. Confirmer ?')) return;
+      state.books = []; state.sessions = [];
+      saveState(); closeSheet(); renderAll(); toast('Tout a été effacé');
+    }
+
+    // ==============================================================
+    // TIMER
+    // ==============================================================
+    let ticker = null;
+    function currentElapsed() {
+      return state.timer.running ? state.timer.elapsedMs + (Date.now() - state.timer.startAt) : state.timer.elapsedMs;
+    }
+    function renderTimer() {
+      els.timerDisplay.textContent = formatDuration(currentElapsed());
+      els.timerDisplay.classList.toggle('running', state.timer.running);
+    }
+    function startTimer() {
+      if (state.timer.running) return;
+      if (!els.timerBookSelect.value) { toast('Choisis un livre d\'abord', 'accent'); return; }
+      state.timer.running = true; state.timer.startAt = Date.now();
+      ticker = setInterval(renderTimer, 500); renderTimer();
+    }
+    function pauseTimer() {
+      if (!state.timer.running) return;
+      state.timer.elapsedMs += Date.now() - state.timer.startAt;
+      state.timer.running = false; state.timer.startAt = null;
+      clearInterval(ticker); renderTimer();
+    }
+    function resetTimer() {
+      state.timer.running = false; state.timer.startAt = null; state.timer.elapsedMs = 0;
+      clearInterval(ticker); renderTimer();
+    }
+    function saveSession() {
+      const bookId = els.timerBookSelect.value;
+      const durationMs = currentElapsed();
+      const pagesRead = Number(els.pagesReadInput.value);
+      if (!bookId) { toast('Choisis un livre', 'accent'); return; }
+      if (durationMs < 1000) { toast('Lance une vraie session', 'accent'); return; }
+      if (!pagesRead || pagesRead <= 0) { toast('Le nombre de pages est obligatoire', 'accent'); els.pagesReadInput.focus(); return; }
+      if (state.timer.running) pauseTimer();
+      state.sessions.push({ id: uid(), bookId, durationMs, pagesRead, date: todayKey(), createdAt: Date.now() });
+      const book = bookById(bookId);
+      if (book) {
+        const cur = Number(book.currentPage) || 0, tot = Number(book.pages) || 0;
+        book.currentPage = tot > 0 ? Math.min(cur + pagesRead, tot) : cur + pagesRead;
+        if (tot > 0 && book.currentPage >= tot) { book.status = 'finished'; toast(`🎉 ${book.title} terminé !`); }
+        else if (book.status === 'pal') book.status = 'reading';
+        book.updatedAt = Date.now();
+      }
+      saveState(); els.pagesReadInput.value = ''; resetTimer(); renderAll();
+      if (book && book.status !== 'finished') toast(`Session enregistrée : ${pagesRead} pages ✓`);
+    }
+    window.adjustPages = function (delta) {
+      const cur = Number(els.pagesReadInput.value) || 0;
+      els.pagesReadInput.value = Math.max(0, cur + delta);
+    };
+
+    // ==============================================================
+    // DEMO DATA
+    // ==============================================================
+    function seedDemoData() {
+      if (state.books.length && !confirm('Remplacer les données actuelles par un exemple ?')) return;
+      const duneId = uid(), neuroId = uid(), atwId = uid();
+      state.books = [
+        { id: duneId, title: 'Dune', author: 'Frank Herbert',
+          cover: 'https://books.google.com/books/content?id=lyP_DwAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api',
+          description: 'Sur Arrakis, désert hostile et seule source d\'épice, politique, religion et écologie s\'affrontent dans un roman monumental.',
+          pages: 832, currentPage: 320, status: 'reading', type: 'papier', rating: 0, updatedAt: Date.now() },
+        { id: neuroId, title: 'Neuromancien', author: 'William Gibson', cover: '',
+          description: 'Classique cyberpunk tendu, sale, brillant et visionnaire.',
+          pages: 320, currentPage: 85, status: 'reading', type: 'papier', rating: 0, updatedAt: Date.now() },
+        { id: uid(), title: 'La Servante écarlate', author: 'Margaret Atwood', cover: '',
+          description: 'Dystopie glaçante dans une théocratie patriarcale.',
+          pages: 432, currentPage: 432, status: 'finished', type: 'audio', rating: 5, updatedAt: Date.now() },
+        { id: uid(), title: 'Le Problème à trois corps', author: 'Liu Cixin', cover: '',
+          description: 'Hard SF chinoise qui part d\'une énigme scientifique pour basculer dans le premier contact.',
+          pages: 450, currentPage: 0, status: 'pal', type: 'papier', rating: 0, updatedAt: Date.now() },
+        { id: uid(), title: 'Station Eleven', author: 'Emily St. John Mandel', cover: '',
+          description: 'Post-apo mélancolique, troupe de théâtre itinérante après la pandémie.',
+          pages: 384, currentPage: 0, status: 'pal', type: 'papier', rating: 0, updatedAt: Date.now() },
+      ];
+      // Sessions sur 30 jours
+      state.sessions = [];
+      const patterns = [
+        { id: duneId, dayOffset: 0, durationMs: 45 * 60000, pagesRead: 38 },
+        { id: duneId, dayOffset: 2, durationMs: 30 * 60000, pagesRead: 22 },
+        { id: duneId, dayOffset: 4, durationMs: 55 * 60000, pagesRead: 45 },
+        { id: duneId, dayOffset: 5, durationMs: 25 * 60000, pagesRead: 18 },
+        { id: duneId, dayOffset: 8, durationMs: 40 * 60000, pagesRead: 32 },
+        { id: duneId, dayOffset: 10, durationMs: 60 * 60000, pagesRead: 50 },
+        { id: duneId, dayOffset: 12, durationMs: 35 * 60000, pagesRead: 28 },
+        { id: neuroId, dayOffset: 14, durationMs: 50 * 60000, pagesRead: 40 },
+        { id: neuroId, dayOffset: 17, durationMs: 20 * 60000, pagesRead: 15 },
+        { id: neuroId, dayOffset: 20, durationMs: 45 * 60000, pagesRead: 30 },
+        { id: duneId, dayOffset: 23, durationMs: 70 * 60000, pagesRead: 55 },
+        { id: duneId, dayOffset: 26, durationMs: 40 * 60000, pagesRead: 32 },
+      ];
+      patterns.forEach(p => {
+        const d = new Date(); d.setDate(d.getDate() - p.dayOffset);
+        state.sessions.push({ id: uid(), bookId: p.id, durationMs: p.durationMs, pagesRead: p.pagesRead, date: d.toISOString().slice(0,10), createdAt: Date.now() });
+      });
+      saveState(); closeSheet(); renderAll();
+      toast('Données d\'exemple chargées ✓');
+    }
+
+    // ==============================================================
+    // SHEET
+    // ==============================================================
+    function openSheet() { qs('sheet').classList.add('show'); qs('sheetBackdrop').classList.add('show'); }
+    function closeSheet() { qs('sheet').classList.remove('show'); qs('sheetBackdrop').classList.remove('show'); }
+
+    // ==============================================================
+    // RENDER ALL
+    // ==============================================================
+    function renderAll() {
+      renderDashboard(); renderLibrary(); renderTimerSelect(); renderTodaySessions(); renderTimer();
+      if (!qs('searchResults').children.length) renderSearchResults([]);
+    }
+
+    // ==============================================================
+    // INIT
+    // ==============================================================
+    function bindElements() {
+      ['formTitle','formAuthor','formCover','formDescription','formPages','formCurrentPage',
+       'formStatus','formType','saveBookBtn','resetFormBtn','ratingStarsInput','ratingHelpText',
+       'googleSearchInput','googleSearchBtn','exportBtn','importFile','seedBtn','wipeBtn',
+       'timerDisplay','timerBookSelect','pagesReadInput',
+       'startTimerBtn','pauseTimerBtn','resetTimerBtn','saveSessionBtn',
+       'librarySearch','menuBtn','sheetBackdrop','toast'].forEach(id => { els[id] = qs(id); });
+    }
+    function bindEvents() {
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+      els.librarySearch.addEventListener('input', e => { state.libraryFilters.query = e.target.value.trim(); renderLibrary(); });
+      document.querySelectorAll('[data-status]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.libraryFilters.status = btn.dataset.status;
+          document.querySelectorAll('[data-status]').forEach(b => b.classList.toggle('on', b.dataset.status === btn.dataset.status));
+          renderLibrary();
+        });
+      });
+      document.querySelectorAll('[data-type]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.libraryFilters.type = btn.dataset.type;
+          document.querySelectorAll('[data-type]').forEach(b => b.classList.toggle('on', b.dataset.type === btn.dataset.type));
+          renderLibrary();
+        });
+      });
+      els.googleSearchBtn.addEventListener('click', searchGoogleBooks);
+      els.googleSearchInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchGoogleBooks(); });
+      els.saveBookBtn.addEventListener('click', saveBook);
+      els.resetFormBtn.addEventListener('click', resetForm);
+      document.addEventListener('click', e => {
+        const btn = e.target.closest('.star-btn[data-rating]');
+        if (!btn) return;
+        updateRatingInput(Number(btn.dataset.rating) || 0);
+      });
+      els.exportBtn.addEventListener('click', exportJson);
+      els.importFile.addEventListener('change', e => { const f = e.target.files?.[0]; if (f) importJson(f); e.target.value = ''; });
+      els.seedBtn.addEventListener('click', seedDemoData);
+      els.wipeBtn.addEventListener('click', wipeData);
+      els.startTimerBtn.addEventListener('click', startTimer);
+      els.pauseTimerBtn.addEventListener('click', pauseTimer);
+      els.resetTimerBtn.addEventListener('click', resetTimer);
+      els.saveSessionBtn.addEventListener('click', saveSession);
+      els.timerBookSelect.addEventListener('change', updateTimerBookNote);
+      els.menuBtn.addEventListener('click', openSheet);
+      els.sheetBackdrop.addEventListener('click', closeSheet);
+      window.addEventListener('beforeunload', () => { if (state.timer.running) pauseTimer(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+      window.addEventListener('resize', () => { if (state.activeView === 'dashboard') renderDashboard(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      bindElements(); bindEvents(); loadState(); updateRatingInput(0); renderAll();
+    });
+  </script>
+</body>
+</html>
