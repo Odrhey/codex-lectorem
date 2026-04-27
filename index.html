@@ -1979,7 +1979,7 @@
       if (!query) return;
       qs('searchResults').innerHTML = `<div class="empty">Recherche en cours…</div>`;
       try {
-        const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10;
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10`;
         const r = await fetch(url);
         const data = await r.json();
         const items = (data.items || []).map(item => ({
